@@ -1,0 +1,121 @@
+import os
+
+from fastapi import FastAPI, Depends
+
+
+
+
+
+from backend.app.security.encrypted_upload_key_file_guard import (
+    activate_encrypted_upload_with_key_file_guard
+)
+
+
+from backend.app.api.health import (
+    router as health_router
+)
+
+from backend.app.api.documents import (
+    router as documents_router
+)
+
+from backend.app.api.document_metadata import (
+    router as metadata_router
+)
+
+from backend.app.api.auth import (
+    router as auth_router
+)
+
+from backend.app.api.private_documents import (
+    router as private_documents_router
+)
+
+from backend.app.security.legacy_routes import (
+    reject_legacy_document_access
+)
+
+
+app = FastAPI(
+    title="SecureVault Enterprise API",
+    version="0.7.0"
+)
+
+
+# Health endpoint
+app.include_router(health_router)
+
+
+# OLD DOCUMENT APIS — RETIRED
+# The dependency rejects every request with HTTP 410.
+# The routes are also hidden from Swagger.
+app.include_router(
+    documents_router,
+    dependencies=[Depends(reject_legacy_document_access)],
+    include_in_schema=False
+)
+
+app.include_router(
+    metadata_router,
+    dependencies=[Depends(reject_legacy_document_access)],
+    include_in_schema=False
+)
+
+
+# Authentication routes
+app.include_router(auth_router)
+
+
+# NEW JWT-PROTECTED DOCUMENT ROUTES
+app.include_router(private_documents_router)
+
+# LESSON 69:
+# Encrypted uploads are disabled by default.
+#
+# Explicit activation requires:
+# SECUREVAULT_ENABLE_ENCRYPTED_UPLOAD=1
+#
+# Registration validates trusted database,
+# storage and DPAPI key configuration.
+#
+# Do not suppress configuration exceptions.
+
+
+encrypted_upload_activation = (
+    activate_encrypted_upload_with_key_file_guard(
+        app=app,
+        environment=os.environ
+    )
+)
+
+
+
+
+
+
+# FAST-TRACK: Attach download only after all existing enabled-mode guards
+# have validated the deployment and registered the encrypted upload route.
+# Keep SECUREVAULT_ENABLE_ENCRYPTED_UPLOAD unset/0 until deployment review.
+if encrypted_upload_activation.get("registered") is True:
+    from backend.app.security.encrypted_upload_registration import (
+        check_encrypted_upload_configuration,
+    )
+    from backend.app.security.encrypted_download_router import (
+        create_jwt_encrypted_download_router,
+    )
+
+    _encrypted_config = check_encrypted_upload_configuration(os.environ)
+    app.include_router(
+        create_jwt_encrypted_download_router(
+            db_path=_encrypted_config["db_path"],
+            storage_dir=_encrypted_config["storage_dir"],
+            key_directory=_encrypted_config["key_directory"],
+        )
+    )
+
+
+@app.get("/")
+def home():
+    return {
+        "message": "Welcome to SecureVault Enterprise API"
+    }

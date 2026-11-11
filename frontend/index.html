@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>SecureVault Enterprise · Workspace</title>
+<link rel="stylesheet" href="/vault/assets/vault.css">
+<script defer src="/vault/assets/vault.js"></script>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo"><div class="logoicon">◆</div><div>SecureVault<small>ENTERPRISE</small></div></div>
+    <div class="navsection">WORKSPACE</div>
+    <nav aria-label="Main navigation">
+      <a class="navitem active" href="#overview"><span>▦</span> Overview</a>
+      <a class="navitem" href="#library"><span>▤</span> My documents</a>
+      <a class="navitem" href="#uploadSection"><span>↥</span> Upload files</a>
+      <a class="navitem" href="#binarySection"><span>▣</span> Binary files</a>
+      <a class="navitem" href="#activitySection"><span>◷</span> Activity & security</a>
+    </nav>
+    <div class="sidebarfoot"><div class="shield">✦</div><strong>Protected workspace</strong><p>Encryption and access controls are enforced by your existing backend.</p><small>LOCAL MVP · BATCH 2</small></div>
+  </aside>
+  <div class="mainwrap">
+    <header class="topbar"><div class="breadcrumb">Workspace <span>/</span> <strong>Overview</strong></div><div class="topactions"><span id="mode" class="statuspill">Checking vault…</span><button id="themeToggle" class="iconbutton" type="button" aria-label="Toggle dark mode">◐</button><button id="logout" class="button subtle" type="button" hidden>Log out</button></div></header>
+    <main id="overview">
+      <div class="hero"><div><div class="eyebrow">SECURE DOCUMENT WORKSPACE</div><h1>Welcome to your vault<span>.</span></h1><p>Store, organize, and recover your encrypted documents with confidence.</p></div><div class="heroart" aria-hidden="true"><div class="orbring">⬡</div></div></div>
+      <section class="metrics" aria-label="Document statistics">
+        <article class="metric"><div class="metricicon blue">▤</div><span>Total documents</span><strong id="count">—</strong><small>Owned records</small></article>
+        <article class="metric"><div class="metricicon teal">◈</div><span>Listed file size</span><strong id="totalBytes">—</strong><small>From retrieved metadata</small></article>
+        <article class="metric"><div class="metricicon violet">☷</div><span>Files shown</span><strong id="visibleCount">—</strong><small>Current search result</small></article>
+        <article class="metric"><div class="metricicon amber">✦</div><span>Storage status</span><strong id="storageMetric" class="statusmetric">Checking</strong><small>Reported by the backend</small></article>
+      </section>
+      <section id="loginPanel" class="panel login"><div><div class="eyebrow">ACCOUNT ACCESS</div><h2>Sign in to continue</h2><p>Use your existing SecureVault account. Authentication tokens stay in this tab's memory and are not stored in the browser.</p></div><form id="loginForm"><label for="username">Username</label><input id="username" name="username" autocomplete="username" maxlength="100" required><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required><button class="button primary" type="submit" id="loginFormButton">Sign in securely <span aria-hidden="true">→</span></button></form></section>
+      <div id="workspace" hidden>
+        <div class="sectiontitle"><div><h2>Document workspace</h2><p id="welcome">Authenticated workspace</p></div><button id="refresh" class="button subtle" type="button">↻ Refresh data</button></div>
+        <div id="disabledNotice" class="notice" hidden><strong>Encrypted storage is locked.</strong> Metadata browsing is available. Upload and encrypted downloads remain disabled until backend security checks approve activation.</div>
+        <section id="uploadSection" class="panel uploadpanel" aria-labelledby="uploadHeading"><div class="sectionrow"><div><div class="eyebrow">SECURE TRANSFER</div><h3 id="uploadHeading">Encrypt & upload</h3><p>UTF-8 .txt only · 1 MiB maximum · 10,000 characters maximum</p></div><span class="featuretag">AES-GCM / DPAPI backend</span></div>
+          <div id="uploadPanel" hidden><form id="uploadForm"><div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Choose or drop a text document"><div class="uploadsymbol">↥</div><strong>Drag & drop your document here</strong><span>or click to select a .txt file</span><input id="file" type="file" accept=".txt,text/plain" aria-label="Select a text file"></div><div class="fileline"><span id="selectedFile">No file selected</span><button class="button primary" type="submit" id="uploadButton">Encrypt & upload</button></div><div class="progress" id="uploadProgress" hidden role="status" aria-live="polite"><span class="progressbar"></span><span id="progressLabel">Preparing upload…</span></div></form><p class="fine">Uploads first create metadata, then encrypted content. If encryption fails, a metadata-only record may remain. The UI will report its ID; it will not automatically delete it.</p></div>
+          <p id="uploadLocked" class="lockedmsg" hidden>Encrypted upload is disabled by server configuration.</p>
+        </section>
+        <section id="library" class="panel library" aria-labelledby="libraryHeading"><div class="sectionrow"><div><div class="eyebrow">DOCUMENT MANAGEMENT</div><h3 id="libraryHeading">My documents</h3><p id="docSummary">Loading…</p></div><span class="featuretag">Owner authenticated</span></div>
+          <div class="organizefilters"><label for="folderFilter">Folder</label><select id="folderFilter"><option value="">All folders</option></select><label class="favfilter"><input id="favoriteOnly" type="checkbox"> Favorites only</label></div><div class="filters"><label class="sr-only" for="searchInput">Search filenames</label><input id="searchInput" type="search" placeholder="⌕  Search by filename or document ID" autocomplete="off"><label class="sr-only" for="sortSelect">Sort documents</label><select id="sortSelect"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Filename A–Z</option><option value="size">Largest first</option></select></div>
+          <p id="searchScope" class="scope">Search and sorting apply to metadata loaded from your account (up to 500 records). No content is sent to a search service.</p>
+          <div class="tablewrap"><table class="doctable"><thead><tr><th>Document</th><th>Size</th><th>Created</th><th>Actions</th></tr></thead><tbody id="documents"><tr><td colspan="4">Sign in to view documents</td></tr></tbody></table></div>
+          <div class="pagination"><span id="pageLabel">Page 1</span><div><button id="prev" class="button subtle" type="button" disabled>Previous</button><button id="next" class="button subtle" type="button" disabled>Next</button></div></div>
+          <p class="fine">An existing metadata record is not proof that ciphertext exists. Encrypted rename is rejected by the backend; deletion calls your authenticated lifecycle API.</p>
+        </section>
+        <!-- SECUREVAULT BATCH 3 — isolated binary documents, separate from existing .txt workflow -->
+        <section id="binarySection" class="panel" aria-labelledby="binaryHeading">
+          <div class="sectionrow"><div><div class="eyebrow">ENCRYPTED BINARY DOCUMENTS</div><h3 id="binaryHeading">PDF · Word · Excel · Images</h3><p>Isolated binary vault · PDF, DOCX, XLSX, PNG and JPEG · Up to 5 MiB each</p></div><span class="featuretag">AES-GCM / Windows DPAPI</span></div>
+          <p class="fine">Files are encrypted as opaque bytes; SecureVault does not preview, scan, render or execute their contents. Keep using the existing text uploader for .txt files.</p>
+          <form id="binaryForm"><div id="binaryDrop" class="dropzone"><label for="binaryFile">Choose or drop a PDF, Word, Excel or image file</label><input id="binaryFile" type="file" accept=".pdf,.docx,.xlsx,.png,.jpg,.jpeg" aria-label="Select a supported binary document"></div>
+            <div class="fileline"><span id="binarySelected">No binary document selected</span><button id="binaryUpload" class="button primary" type="submit">Encrypt binary file</button></div></form>
+          <div class="sectionrow"><div><h3>My encrypted binary files</h3><p id="binarySummary">Sign in to load binary documents</p></div><button id="binaryRefresh" type="button" class="button subtle">Refresh</button></div>
+          <ul id="binaryList" class="binarylist"><li>Sign in to view documents.</li></ul>
+          <div id="binaryMessage" class="message" role="status" aria-live="polite"></div>
+        </section>
+
+        <section id="activitySection" class="panel activity" aria-labelledby="activityHeading"><div class="sectionrow"><div><div class="eyebrow">THIS BROWSER TAB</div><h3 id="activityHeading">Recent activity</h3><p>Server-observed file events and persistent organization changes in this isolated demo. Best-effort local history, not a tamper-proof compliance audit.</p></div><span class="featuretag">Memory only</span></div><p id="securitySummary" class="scope">Sign in to view security event history.</p><ul id="auditList"><li>Sign in to view activity.</li></ul><p class="fine">Records event type, document ID and timestamp—not document contents, passwords or JWTs.</p><h4>Current-tab feedback</h4><ul id="activityList"><li>No activity yet.</li></ul></section>
+      </div>
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+    </main>
+    <footer>SecureVault Enterprise · Local demonstration MVP · Not a production-certified vault</footer>
+  </div>
+</div>
+</body>
+</html>
