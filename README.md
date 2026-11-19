@@ -236,14 +236,14 @@ $env:SECUREVAULT_JWT_SECRET = (& .\.venv\Scripts\python.exe -c "import secrets; 
 ### 5. Start the API
 
 ~~~powershell
-.\.venv\Scripts\python.exe -m uvicorn backend.api_main:app --reload --host 127.0.0.1 --port 8000
+.\.venv\Scripts\python.exe -m uvicorn backend.api_main:app --reload --host 127.0.0.1 --port 8766
 ~~~
 
 Open these local addresses:
 
-- Dashboard: http://127.0.0.1:8000/vault
-- Health check: http://127.0.0.1:8000/health
-- Interactive API documentation: http://127.0.0.1:8000/docs
+- Dashboard: http://127.0.0.1:8766/vault
+- Health check: http://127.0.0.1:8766/health
+- Interactive API documentation: http://127.0.0.1:8766/docs
 
 **Account note:** the current API exposes token issuance and identity routes, but does not expose a public sign-up screen or public registration endpoint. A local account and the required document database schema must be provisioned before authenticated document operations can be exercised.
 
@@ -329,25 +329,49 @@ The following are sensible next engineering milestones, not claims that they are
 
 ## Screenshots
 
-**Real application screenshots are not included yet.** The repository includes branding assets under `docs/assets/`; add genuine captures from the running application under `docs/screenshots/` rather than mockups so the README accurately represents the implementation.
+Genuine captures from the configured local demo at [http://127.0.0.1:8766/vault](http://127.0.0.1:8766/vault). Localhost links work only on the computer running the project. The demo has encrypted storage enabled; the repository default remains disabled until its configuration and preflight checks pass.
 
-Save the images under `docs/screenshots/` using these suggested names:
+### Dashboard overview
 
-| Suggested file | What to capture |
-|---|---|
-| `01-dashboard-overview.png` | Full dashboard at `/vault`, with sample data only |
-| `02-sign-in.png` | Login panel; do not show or enter a real password in the capture |
-| `03-document-library.png` | Authenticated document table with fictional filenames and IDs |
-| `04-organization-filters.png` | Folder, tag, favorite, search, and sorting controls |
-| `05-activity-security.png` | Activity / security panel, with identifying details redacted |
-| `06-api-docs.png` | FastAPI `/docs` page showing the main endpoint groups |
-| `07-encrypted-flow.png` | Optional successful test upload/download demonstration from an isolated test environment |
+Authenticated workspace with document counts, listed file size, and storage status.
 
-After the real image files are added, embed them in this section using relative Markdown image links. For example:
+![SecureVault authenticated dashboard](docs/screenshots/03-dashboard.jpg)
 
-~~~markdown
-![SecureVault dashboard](docs/screenshots/01-dashboard-overview.png)
-~~~
+### Document library and filters
+
+Document metadata, folder and favorite filters, filename search, sorting, and document actions.
+
+![SecureVault document library and organization filters](docs/screenshots/04-document-library.jpg)
+
+### Encrypted text upload
+
+Text-file selection and the configured AES-GCM / DPAPI upload interface.
+
+![SecureVault encrypted text upload interface](docs/screenshots/05-encrypted-upload.jpg)
+
+### Binary-file vault
+
+The separate PDF, Word, Excel, and image upload interface, with an empty binary-file library.
+
+![SecureVault binary-file vault](docs/screenshots/06-binary-files.jpg)
+
+### Activity and security
+
+Recent demo events and current-tab feedback. This history is best effort and is not a tamper-proof compliance audit.
+
+![SecureVault activity and security panel](docs/screenshots/07-activity-security.jpg)
+
+### Sign-in
+
+Public workspace and account access, captured without credentials.
+
+![SecureVault sign-in screen](docs/screenshots/01-sign-in.jpg)
+
+### Interactive API documentation
+
+Swagger UI for the running demo API.
+
+![SecureVault interactive API documentation](docs/screenshots/02-api-docs.jpg)
 
 **Screenshot safety:** use fictional test accounts and documents. Never include passwords, JWTs, API keys, DPAPI files, private keys, real personal documents, database contents, or sensitive filesystem paths.
 
